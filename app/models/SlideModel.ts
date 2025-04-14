@@ -1,4 +1,3 @@
-// src/models/SlideModel.ts
 export type SlideType =
     | 'slide_intro'    // Вступительный слайд
     | 'slide_content'   // Контентный слайд

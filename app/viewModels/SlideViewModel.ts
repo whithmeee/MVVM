@@ -1,6 +1,5 @@
-// src/viewModels/SlideViewModel.ts
 import { makeAutoObservable } from "mobx";
-import { SlideModel, SlideType } from "../models/SlideModel";
+import { SlideModel } from "../models/SlideModel";
 
 export class SlideViewModel {
     slides: SlideModel[] = [];
@@ -23,9 +22,9 @@ export class SlideViewModel {
                 ],
                 "slide_intro",
                 "Имя Фамилия", // Автор
-                "https://example.com/background.jpg" // Фоновое изображение
+                "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
             ),
-            // Другие слайды...
+
         ];
     }
 }
