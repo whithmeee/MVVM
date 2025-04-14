@@ -30,8 +30,6 @@ export const useTypingAnimation = ({
     const hasCompletedBefore = localStorage.getItem(`slide_${slideId}_completed`) === 'true';
 
 
-
-
     const [displayedTitle, setDisplayedTitle] = useState(hasCompletedBefore ? title : "");
     const [displayedParagraphs, setDisplayedParagraphs] = useState<string[]>(
         hasCompletedBefore ? content : []

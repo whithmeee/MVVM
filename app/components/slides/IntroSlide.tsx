@@ -33,14 +33,10 @@ export const IntroSlide: React.FC<IntroSlideProps> = ({
 
     return (
         <div className={styles.introSlide}>
-             Блок с изображением слева
             {slide.backgroundImage && (
                 <div className={styles.imageContainer}>
-                    <img
-                        src={slide.backgroundImage}
-                        alt={slide.title}
-                        className={styles.slideImage}
-                    />
+                   <div className={styles.slideImage} style={{backgroundImage: `url(${slide.backgroundImage})`}}>
+                   </div>
                 </div>
             )}
 
