@@ -1,16 +1,27 @@
 export type SlideType =
-    | 'slide_intro'    // Вступительный слайд
-    | 'slide_content'   // Контентный слайд
-    | 'slide_image'     // Слайд с изображением
-    | 'slide_split';    // Разделенный слайд
+    | 'title'
+    | 'intro'
+
+export type ListItem = {
+    title: string;
+    text: string;
+    icon?: string;
+};
+
+export type SlideContent =
+    | string
+    | string[]
+    | ListItem[];
+
 
 export class SlideModel {
     constructor(
         public id: string,
         public title: string,
-        public content: string[],
-        public type: SlideType = 'slide_intro',
-        public authorName?: string,  // Для поля "Имя Фамилия"
-        public backgroundImage?: string
+        public content: SlideContent,
+        public type: SlideType = 'title',
+        public authorName?: string,
+        public backgroundImage?: string,
+        public icon?:string
     ) {}
 }

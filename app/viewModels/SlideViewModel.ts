@@ -1,9 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { SlideModel } from "../models/SlideModel";
-
 export class SlideViewModel {
     slides: SlideModel[] = [];
-    currentSlideIndex = 0;
 
     constructor() {
         makeAutoObservable(this);
@@ -20,11 +18,35 @@ export class SlideViewModel {
                     "Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
                     "Donec quam felis, ultricies nec."
                 ],
-                "slide_intro",
-                "Имя Фамилия", // Автор
+                "title",
+                "Vasya Pupkin",
+                "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
+            ),
+            new SlideModel(
+                "2",
+                "Lorem ipsum dolor sit?",
+                ["Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor."],
+                "intro",
+                "Vasya Pupkin",
                 "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
             ),
 
-        ];
+            new SlideModel(
+                "3",
+                "Lorem ipsum dolor sit?",
+                ["Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor."],
+                "intro",
+                "Vasya Pupkin",
+                "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
+            ),
+            new SlideModel(
+                "4",
+                "Lorem ipsum dolor sit?",
+                ["Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor."],
+                "intro",
+                "Vasya Pupkin",
+                "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
+            ),
+            ]
     }
 }

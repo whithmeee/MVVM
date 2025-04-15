@@ -1,19 +1,22 @@
 "use client";
-import styles from './IntroSlide.module.css';
-import { SlideModel } from "@/app/models/SlideModel";
+import { SlideModel } from "../../models/SlideModel";
+import styles from './TitleSlide.module.css';
 import { useTypingAnimation } from "@/app/components/hooks/useTypingAnimation";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
-interface IntroSlideProps {
+export const TitleSlide = ({
+                               slide,
+                               isActive,
+                               onComplete
+                           }: {
     slide: SlideModel;
+    isActive: boolean;
     onComplete?: () => void;
-    isActive: boolean,
-}
-
-export const IntroSlide = ({ slide, onComplete, isActive }: IntroSlideProps) => {
+}) => {
     const {
         visibleTitle,
         visibleContent,
+        visibleAuthor,
         isComplete,
         currentPhase
     } = useTypingAnimation(slide, isActive);
@@ -25,7 +28,7 @@ export const IntroSlide = ({ slide, onComplete, isActive }: IntroSlideProps) => 
     }, [isComplete]);
 
     return (
-        <div className={styles.intro}>
+        <div className={styles.introSlide}>
             {slide.backgroundImage && (
                 <div className={styles.imageContainer}>
                     <div
@@ -36,20 +39,29 @@ export const IntroSlide = ({ slide, onComplete, isActive }: IntroSlideProps) => 
             )}
 
             <div className={styles.contentContainer}>
-                <h1>
+                <h1 className={styles.slideTitle}>
                     {visibleTitle}
+                    {isActive && currentPhase === 'title' && <span className={styles.cursor}>|</span>}
                 </h1>
 
                 {(currentPhase === 'content' || currentPhase === 'author' || isComplete) && (
-                    <div className={styles.introText}>
+                    <div className={styles.slideText}>
                         {visibleContent.split('\n').map((line, i) => (
                             <p key={i}>
                                 {line}
-                                {currentPhase === 'content' && i === visibleContent.split('\n').length - 1 && (
-                                    <span className={styles.cursor}>|</span>
-                                )}
+                                {isActive && currentPhase === 'content' &&
+                                    i === visibleContent.split('\n').length - 1 && (
+                                        <span className={styles.cursor}>|</span>
+                                    )}
                             </p>
                         ))}
+                    </div>
+                )}
+
+                {(currentPhase === 'author' || isComplete) && slide.authorName && (
+                    <div className={styles.authorField}>
+                        {visibleAuthor}
+                        {isActive && currentPhase === 'author' && <span className={styles.cursor}>|</span>}
                     </div>
                 )}
             </div>

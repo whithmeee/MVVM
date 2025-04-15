@@ -1,146 +1,91 @@
-// hooks/useTypingAnimation.ts
-import { useState, useEffect, useRef, useCallback } from "react";
-import {setLocalStorageItem} from "@/app/components/utils/storage";
+"use client";
+import { useState, useEffect } from 'react';
+import { ListItem } from "@/app/models/SlideModel";
 
-type TypingStage = "title" | "content" | "author";
+type ContentType = string | string[] | ListItem[];
 
-interface UseTypingAnimationProps {
-    slideId: string;
-    title: string;
-    content: string[];
-    authorName?: string;
-    onTypingComplete?: () => void;
-    chunkSize?: number;
-    titleDelay?: number;
-    textDelay?: number;
-    authorDelay?: number;
-}
+export const useTypingAnimation = (
+    card: {
+        title: string;
+        content: ContentType;
+        author?: string;
+    },
+    isActive: boolean,
+    options?: {
+        charsPerChunk?: number;
+        speed?: number;
+    }
+) => {
+    const { charsPerChunk = 5, speed = 200 } = options || {};
+    const [phase, setPhase] = useState<'title' | 'content' | 'author' | 'complete'>('title');
+    const [progress, setProgress] = useState({
+        title: 0,
+        content: 0,
+        author: 0
+    });
 
-export const useTypingAnimation = ({
-                                       slideId,
-                                       title,
-                                       content,
-                                       authorName,
-                                       onTypingComplete,
-                                       chunkSize = 5,
-                                       titleDelay = 80,
-                                       textDelay = 60,
-                                       authorDelay = 100,
-                                   }: UseTypingAnimationProps) => {
-    const hasCompletedBefore = localStorage.getItem(`slide_${slideId}_completed`) === 'true';
-
-
-    const [displayedTitle, setDisplayedTitle] = useState(hasCompletedBefore ? title : "");
-    const [displayedParagraphs, setDisplayedParagraphs] = useState<string[]>(
-        hasCompletedBefore ? content : []
-    );
-    const [displayedAuthor, setDisplayedAuthor] = useState(
-        hasCompletedBefore ? authorName || "" : ""
-    );
-    const [currentStage, setCurrentStage] = useState<TypingStage>(
-        hasCompletedBefore ? "author" : "title"
-    );
-    const [skipAnimation, setSkipAnimation] = useState(hasCompletedBefore);
-    const contentRef = useRef<HTMLDivElement>(null);
-
-    const completeAnimation = useCallback(() => {
-        localStorage.setItem(`slide_${slideId}_completed`, 'true');
-        onTypingComplete?.();
-    }, [slideId, onTypingComplete]);
-
-
-    // Инициализация для уже завершенных анимаций
-    useEffect(() => {
-        if (hasCompletedBefore) {
-            setDisplayedTitle(title);
-            setDisplayedParagraphs(content);
-            if (authorName) setDisplayedAuthor(authorName);
-            onTypingComplete?.();
+    const contentToString = (content: ContentType): string => {
+        if (typeof content === 'string') return content;
+        if (Array.isArray(content)) {
+            return content.map(item =>
+                typeof item === 'string' ? item : `${item.title}\n${item.text}`
+            ).join('\n');
         }
-    }, [hasCompletedBefore, title, content, authorName, onTypingComplete]);
+        return '';
+    };
 
-    // Анимация заголовка
+    const fullContent = contentToString(card.content);
+
+
     useEffect(() => {
-        if (skipAnimation || currentStage !== "title") return;
+        if (isActive) {
+            setPhase('title');
+            setProgress({
+                title: 0,
+                content: 0,
+                author: 0
+            });
+        }
+    }, [isActive]);
 
-        let currentIndex = 0;
-        const titleInterval = setInterval(() => {
-            currentIndex += chunkSize;
-            setDisplayedTitle(title.slice(0, currentIndex));
-
-            if (currentIndex >= title.length) {
-                clearInterval(titleInterval);
-                setCurrentStage("content");
-                setDisplayedParagraphs([""]);
-            }
-        }, titleDelay);
-
-        return () => clearInterval(titleInterval);
-    }, [skipAnimation, currentStage, title, chunkSize, titleDelay]);
-
-    // Анимация контента
     useEffect(() => {
-        if (skipAnimation || currentStage !== "content" || displayedParagraphs.length === 0) return;
+        if (!isActive || phase === 'complete') return;
 
-        const currentParaIndex = displayedParagraphs.length - 1;
-        const currentPara = content[currentParaIndex] || "";
-        let currentIndex = displayedParagraphs[currentParaIndex].length;
+        const timer = setTimeout(() => {
+            setProgress(prev => {
+                const newProgress = {...prev};
 
-        const paraInterval = setInterval(() => {
-            currentIndex += chunkSize;
-            const newChunk = currentPara.slice(0, currentIndex);
-
-            setDisplayedParagraphs(prev => [
-                ...prev.slice(0, -1),
-                newChunk
-            ]);
-
-            if (contentRef.current) {
-                contentRef.current.scrollTop = contentRef.current.scrollHeight;
-            }
-
-            if (currentIndex >= currentPara.length) {
-                clearInterval(paraInterval);
-
-                if (currentParaIndex < content.length - 1) {
-                    setDisplayedParagraphs(prev => [...prev, ""]);
-                } else if (authorName) {
-                    setCurrentStage("author");
-                    setDisplayedAuthor("");
-                } else {
-                    completeAnimation();
+                if (phase === 'title') {
+                    newProgress.title = Math.min(prev.title + charsPerChunk, card.title.length);
+                    if (newProgress.title >= card.title.length) {
+                        setPhase('content');
+                    }
                 }
-            }
-        }, textDelay);
+                else if (phase === 'content') {
+                    newProgress.content = Math.min(prev.content + charsPerChunk, fullContent.length);
+                    if (newProgress.content >= fullContent.length) {
+                        setPhase(card.author ? 'author' : 'complete');
+                    }
+                }
+                else if (phase === 'author' && card.author) {
+                    newProgress.author = Math.min(prev.author + charsPerChunk, card.author.length);
+                    if (newProgress.author >= card.author.length) {
+                        setPhase('complete');
+                    }
+                }
 
-        return () => clearInterval(paraInterval);
-    }, [skipAnimation, currentStage, displayedParagraphs, content, authorName, completeAnimation, chunkSize, textDelay]);
+                return newProgress;
+            });
+        }, speed);
 
-    // Анимация автора
-    useEffect(() => {
-        if (skipAnimation || currentStage !== "author" || !authorName) return;
-
-        let currentIndex = 0;
-        const authorInterval = setInterval(() => {
-            currentIndex += chunkSize;
-            setDisplayedAuthor(authorName.slice(0, currentIndex));
-
-            if (currentIndex >= authorName.length) {
-                clearInterval(authorInterval);
-                completeAnimation();
-            }
-        }, authorDelay);
-
-        return () => clearInterval(authorInterval);
-    }, [skipAnimation, currentStage, authorName, completeAnimation, chunkSize, authorDelay]);
+        return () => clearTimeout(timer);
+    }, [isActive, phase, progress, card, fullContent, charsPerChunk, speed]);
 
     return {
-        displayedTitle,
-        displayedParagraphs,
-        displayedAuthor,
-        currentStage,
-        skipAnimation,
-        contentRef,
-        isTypingComplete: hasCompletedBefore || skipAnimation,
+        visibleTitle: card.title.slice(0, progress.title),
+        visibleContent: fullContent.slice(0, progress.content),
+        visibleAuthor: card.author?.slice(0, progress.author) || '',
+        isComplete: phase === 'complete',
+        currentPhase: phase
     };
 };

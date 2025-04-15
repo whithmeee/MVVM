@@ -1,11 +1,13 @@
-.intro {
+/* src/components/slides/Slides.module.css */
+.introSlide {
     display: flex;
     width: 70%;
     justify-content: center;
     margin: 0 auto;
     transition: max-height 0.5s ease-in-out;
-    min-height: 450px;
 }
+
+
 
 .imageContainer {
     flex: 0 0 33%;
@@ -37,6 +39,7 @@
     background-repeat: no-repeat;
 }
 
+/* Контейнер для контента (правая часть) */
 .contentContainer {
     flex: 1;
     padding: 4rem;
@@ -47,7 +50,54 @@
     color: #333333;
 }
 
-.introText {
-    display: flex;
-    gap: 10px;
+.slideTitle {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #222222;
+    line-height: 1.2;
 }
+
+
+.slideText p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.authorField {
+    padding-top: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+    opacity: 1;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    .introSlide {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .imageContainer {
+        flex: 0 0 300px; /* Фиксированная высота изображения на мобильных */
+    }
+
+    .contentContainer {
+        padding: 2rem;
+    }
+
+    .slideTitle {
+        font-size: 2rem;
+    }
+}
+
+

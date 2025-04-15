@@ -1,28 +1,24 @@
-import React, {useState} from "react";
+import React from "react";
 import { SlideModel } from "../models/SlideModel";
+import { TitleSlide } from "./slides/TitleSlide";
 import { IntroSlide } from "./slides/IntroSlide";
-
 
 interface SlideFactoryProps {
     slide: SlideModel;
-    onSlideComplete?: () => void;
+    isActive: boolean;
+    onComplete?: () => void;
 }
 
-export const SlideFactory: React.FC<SlideFactoryProps> = ({ slide, onSlideComplete }) => {
-    const [typingCompleted, setTypingCompleted] = useState(false);
-
-
-    const handleTypingComplete = () => {
-        setTypingCompleted(true);
-        onSlideComplete?.();
-    }
-
-
-
+export const SlideFactory: React.FC<SlideFactoryProps> = ({
+                                                              slide,
+                                                              isActive,
+                                                              onComplete
+                                                          }) => {
     switch (slide.type) {
-        case 'slide_intro':
-            return <IntroSlide slide={slide}  onTypingComplete={handleTypingComplete} slideId={slide.id} />;
-        case 'slide_content':
+        case "title":
+            return <TitleSlide slide={slide} isActive={isActive} onComplete={onComplete} />;
+        case "intro":
+            return <IntroSlide slide={slide} isActive={isActive} onComplete={onComplete} />;
         default:
             return null;
     }
