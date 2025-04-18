@@ -7,18 +7,21 @@ import { useEffect } from "react";
 export const TitleSlide = ({
                                slide,
                                isActive,
-                               onComplete
+                               onComplete,
+                               thumbnailMode = false
                            }: {
     slide: SlideModel;
     isActive: boolean;
     onComplete?: () => void;
+    thumbnailMode?: boolean;
 }) => {
     const {
         visibleTitle,
         visibleContent,
         visibleAuthor,
         isComplete,
-        currentPhase
+        currentPhase,
+
     } = useTypingAnimation(slide, isActive);
 
     useEffect(() => {
@@ -40,7 +43,7 @@ export const TitleSlide = ({
 
             <div className={styles.contentContainer}>
                 <h1 className={styles.slideTitle}>
-                    {visibleTitle}
+                    {thumbnailMode ? slide.title : visibleTitle}
                     {isActive && currentPhase === 'title' && <span className={styles.cursor}>|</span>}
                 </h1>
 

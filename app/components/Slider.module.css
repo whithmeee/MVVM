@@ -1,16 +1,28 @@
-.cardsContainer {
-    width: 100%;
+.container {
+    display: flex;
     height: 100vh;
+    position: relative;
+}
+
+.sidebar {
+    width: 220px;
+    padding: 10px;
+    background: #f5f5f5;
     overflow-y: auto;
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cardsContainer {
+    flex: 1;
+    overflow-y: auto;
 }
 
 .cardWrapper {
-    width: 100%;
     padding: 20px;
-    box-sizing: border-box;
-    scroll-snap-align: start;
 }
+
 
 

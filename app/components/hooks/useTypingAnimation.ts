@@ -16,7 +16,7 @@ export const useTypingAnimation = (
         speed?: number;
     }
 ) => {
-    const { charsPerChunk = 5, speed = 200 } = options || {};
+    const { charsPerChunk = 5, speed = 30 } = options || {};
     const [phase, setPhase] = useState<'title' | 'content' | 'author' | 'complete'>('title');
     const [progress, setProgress] = useState({
         title: 0,

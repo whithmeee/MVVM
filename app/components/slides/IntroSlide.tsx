@@ -8,9 +8,10 @@ interface IntroSlideProps {
     slide: SlideModel;
     onComplete?: () => void;
     isActive: boolean,
+    thumbnailMode?: boolean
 }
 
-export const IntroSlide = ({ slide, onComplete, isActive }: IntroSlideProps) => {
+export const IntroSlide = ({ slide, onComplete, isActive, thumbnailMode }: IntroSlideProps) => {
     const {
         visibleTitle,
         visibleContent,

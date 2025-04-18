@@ -1,9 +1,12 @@
-"use client";
 import { observer } from "mobx-react-lite";
 import { SlideViewModel } from "../viewModels/SlideViewModel";
 import { SlideFactory } from "./SlideFactory";
 import styles from './Slider.module.css';
 import { useState, useEffect, useRef } from 'react';
+
+
+
+
 
 interface SliderProps {
     viewModel: SlideViewModel;
@@ -15,14 +18,12 @@ export const Slider = observer(({ viewModel }: SliderProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleCardComplete = () => {
-
         if (currentCardIndex < viewModel.slides.length - 1) {
             const nextIndex = currentCardIndex + 1;
             setVisibleCards(prev => [...prev, nextIndex]);
             setCurrentCardIndex(nextIndex);
         }
     };
-
 
     useEffect(() => {
         if (visibleCards.length > 1) {
@@ -37,22 +38,36 @@ export const Slider = observer(({ viewModel }: SliderProps) => {
     }, [visibleCards]);
 
     return (
-        <div ref={containerRef} className={styles.cardsContainer}>
-            {viewModel.slides.map((card, index) => (
-                visibleCards.includes(index) && (
-                    <div
-                        key={card.id}
-                        id={`card-${index}`}
-                        className={styles.cardWrapper}
-                    >
-                        <SlideFactory
-                            slide={card}
-                            isActive={index === currentCardIndex}
-                            onComplete={index === currentCardIndex ? handleCardComplete : undefined}
-                        />
-                    </div>
-                )
-            ))}
+        <div className={styles.container}>
+            {/* Боковая панель с миниатюрами */}
+            <div className={styles.sidebar}>
+                {/*{viewModel.slides.map((slide, index) => (*/}
+                {/*    <SmartThumbnail*/}
+                {/*        key={slide.id}*/}
+                {/*        slide={slide}*/}
+                {/*        isActive={index === currentCardIndex}*/}
+                {/*        onClick={() => console.log(index)}*/}
+                {/*    />*/}
+                {/*))}*/}
+            </div>
+            {/* Основной слайдер */}
+            <div ref={containerRef} className={styles.cardsContainer}>
+                {viewModel.slides.map((card, index) => (
+                    visibleCards.includes(index) && (
+                        <div
+                            key={card.id}
+                            id={`card-${index}`}
+                            className={styles.cardWrapper}
+                        >
+                            <SlideFactory
+                                slide={card}
+                                isActive={index === currentCardIndex}
+                                onComplete={index === currentCardIndex ? handleCardComplete : undefined}
+                            />
+                        </div>
+                    )
+                ))}
+            </div>
         </div>
     );
 });
