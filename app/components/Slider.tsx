@@ -3,10 +3,7 @@ import { SlideViewModel } from "../viewModels/SlideViewModel";
 import { SlideFactory } from "./SlideFactory";
 import styles from './Slider.module.css';
 import { useState, useEffect, useRef } from 'react';
-
-
-
-
+import {ThumbnailWrapper} from "@/app/components/ThumbnailWrapper";
 
 interface SliderProps {
     viewModel: SlideViewModel;
@@ -25,6 +22,7 @@ export const Slider = observer(({ viewModel }: SliderProps) => {
         }
     };
 
+
     useEffect(() => {
         if (visibleCards.length > 1) {
             const lastCard = document.getElementById(`card-${visibleCards[visibleCards.length - 1]}`);
@@ -37,19 +35,26 @@ export const Slider = observer(({ viewModel }: SliderProps) => {
         }
     }, [visibleCards]);
 
-    return (
+   return  (
         <div className={styles.container}>
-            {/* Боковая панель с миниатюрами */}
+            {/* Сайдбар с миниатюрами */}
             <div className={styles.sidebar}>
-                {/*{viewModel.slides.map((slide, index) => (*/}
-                {/*    <SmartThumbnail*/}
-                {/*        key={slide.id}*/}
-                {/*        slide={slide}*/}
-                {/*        isActive={index === currentCardIndex}*/}
-                {/*        onClick={() => console.log(index)}*/}
-                {/*    />*/}
-                {/*))}*/}
+                {viewModel.slides.map((card, index) => (
+                    <ThumbnailWrapper
+                        key={`thumb-${card.id}`}
+                        isActive={index === currentCardIndex}
+                        onClick={() => setCurrentCardIndex(index)}
+                    >
+
+                        <SlideFactory
+                            slide={card}
+                            isActive={index === currentCardIndex}
+                            onComplete={index === currentCardIndex ? handleCardComplete : undefined}
+                        />
+                    </ThumbnailWrapper>
+                ))}
             </div>
+
             {/* Основной слайдер */}
             <div ref={containerRef} className={styles.cardsContainer}>
                 {viewModel.slides.map((card, index) => (

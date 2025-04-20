@@ -25,13 +25,17 @@
     justify-content: center;
     flex: 0 0 auto;
     touch-action: none;
-    cursor: pointer;
+
     border-radius: 5px;
     border: none;
     outline: none;
     appearance: none;
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
 }
 
 .DragHandle:hover {

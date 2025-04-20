@@ -22,14 +22,7 @@ export class SlideViewModel {
                 "Vasya Pupkin",
                 "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
             ),
-            new SlideModel(
-                "2",
-                "Lorem ipsum dolor sit?",
-                ["Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor."],
-                "intro",
-                "Vasya Pupkin",
-                "https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/itvqlznmcxiyxtm/generated-images/tqBeLeMzW09laa6jfdTJx.png"
-            ),
+
             ]
     }
 }

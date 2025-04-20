@@ -1,3 +1,4 @@
+"use client";
 import {
     UniqueIdentifier,
     Active,
@@ -17,6 +18,7 @@ import {SortableOverlay} from "@/app/create/components/SortableOverlay/SortableO
 import {DragHandle, SortableItem} from "@/app/create/components/SortableItem/SortableItem";
 import React from "react";
 import './SortableList.css';
+import {summaryStore} from "@/app/create/viewModels/SummaryViewModel";
 
 interface BaseItem {
     id: UniqueIdentifier;
@@ -47,12 +49,20 @@ export function SortableList<T extends BaseItem>({items, onChange,renderItem}: P
         <DndContext sensors={sensors} onDragStart={({active}) => {
             setActive(active);
         }}
-        onDragEnd={({active, over}) => {
+        onDragEnd={async({active, over}) => {
             if (over && active.id !== over.id) {
                 const activeIndex = items.findIndex(({ id }) => id === active.id);
                 const overIndex = items.findIndex(({ id }) => id === over.id);
+                const newItems = arrayMove(items, activeIndex, overIndex);
 
-                onChange(arrayMove(items, activeIndex, overIndex));
+                // Сначала оптимистично обновляем UI
+                onChange(newItems);
+
+                try {
+                    await summaryStore.updateSummaryItem(newItems, active.id)
+                } catch (error) {
+                    onChange(items);
+                }
             }
             setActive(null);
         }}

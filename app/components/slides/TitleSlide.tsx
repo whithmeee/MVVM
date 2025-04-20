@@ -43,7 +43,7 @@ export const TitleSlide = ({
 
             <div className={styles.contentContainer}>
                 <h1 className={styles.slideTitle}>
-                    {thumbnailMode ? slide.title : visibleTitle}
+                    { slide.title ? visibleTitle : ''}
                     {isActive && currentPhase === 'title' && <span className={styles.cursor}>|</span>}
                 </h1>
 
